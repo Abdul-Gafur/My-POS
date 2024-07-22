@@ -15,7 +15,7 @@ $total_earned = 0;
         <title>Transaction Report</title>
 		
         <!-- Favicon -->
-        <link rel="shortcut icon" href="<?=base_url()?>public/images/icon.ico">
+        <link rel="shortcut icon" href="<?=base_url()?>public/images/logo1.png">
         <!-- favicon ends --->
         
         <!--- LOAD FILES -->

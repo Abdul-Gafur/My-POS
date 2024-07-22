@@ -174,7 +174,7 @@ $(document).ready(function(){
         
         if(formChanges("editAdminForm")){
             //reset all error msgs in case they are set
-            changeInnerHTML(['firstNameEditErr', 'lastNameEditErr', 'emailEditErr', 'roleEditErr', 'mobile1Err', 'mobile2Err'], "");
+            changeInnerHTML(['firstNameEditErr', 'lastNameEditErr', 'emailEditErr', 'roleEditErr', 'mobile1Err', 'mobile2Err', 'passwordEditErr'], "");
 
             var firstName = $("#firstNameEdit").val();
             var lastName = $("#lastNameEdit").val();
@@ -183,14 +183,16 @@ $(document).ready(function(){
             var mobile2 = $("#mobile2Edit").val();
             var role = $("#roleEdit").val();
             var adminId = $("#adminId").val();
+			var password = $("#passwordEdit").val();
 
             //ensure all required fields are filled
-            if(!firstName || !lastName || !email || !role || !mobile1){
+            if(!firstName || !lastName || !email || !role || !mobile1 || !password){
                 !firstName ? changeInnerHTML('firstNameEditErr', "required") : "";
                 !lastName ? changeInnerHTML('lastNameEditErr', "required") : "";
                 !email ? changeInnerHTML('emailEditErr', "required") : "";
                 !mobile1 ? changeInnerHTML('mobile1EditErr', "required") : "";
                 !role ? changeInnerHTML('roleEditErr', "required") : "";
+				!password ? changeInnerHTML('passwordEditErr', "required") : "";
 
                 return;
             }
@@ -208,7 +210,7 @@ $(document).ready(function(){
             $.ajax({
                 method: "POST",
                 url: appRoot+"administrators/update",
-                data: {firstName:firstName, lastName:lastName, email:email, role:role, mobile1:mobile1, mobile2:mobile2, adminId:adminId}
+                data: {firstName:firstName, lastName:lastName, email:email, role:role, mobile1:mobile1, mobile2:mobile2, adminId:adminId, password:password}
             }).done(function(returnedData){
                 $("#fMsgEditIcon").removeClass();//remove spinner
 
@@ -222,7 +224,7 @@ $(document).ready(function(){
                     }, 1000);
 
                     //reset all error msgs in case they are set
-                    changeInnerHTML(['firstNameEditErr', 'lastNameEditErr', 'emailEditErr', 'roleEditErr', 'mobile1Err', 'mobile2Err'], "");
+                    changeInnerHTML(['firstNameEditErr', 'lastNameEditErr', 'emailEditErr', 'roleEditErr', 'mobile1Err', 'mobile2Err', 'passwordEditErr'], "");
 
                     //refresh admin list table
                     laad_();
@@ -240,6 +242,7 @@ $(document).ready(function(){
                     $("#mobile1EditErr").html(returnedData.mobile1);
                     $("#mobile2EditErr").html(returnedData.mobile2);
                     $("#roleEditErr").html(returnedData.role);
+					$("#passwordEditErr").html(returnedDAta.password);
                 }
             }).fail(function(){
                     if(!navigator.onLine){
@@ -388,6 +391,7 @@ $(document).ready(function(){
         var email = $(this).siblings(".adminEmail").children('a').html();
         var mobile1 = $(this).siblings(".adminMobile1").html();
         var mobile2 = $(this).siblings(".adminMobile2").html();
+		var password = $(this).siblings(".password").html();
         
         //prefill the form fields
         $("#firstNameEdit").val(firstName);
@@ -396,6 +400,7 @@ $(document).ready(function(){
         $("#mobile1Edit").val(mobile1);
         $("#mobile2Edit").val(mobile2);
         $("#roleEdit").val(role);
+		$("#passwordEdit").val(password);
         
         $("#editAdminModal").modal('show');
     });

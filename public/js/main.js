@@ -1,6 +1,6 @@
 'use strict';
 
-var appRoot = setAppRoot("mypos", "mypos");
+var appRoot = setAppRoot("elp", "elp");
 var spinnerClass = 'fa fa-spinner faa-spin animated';
 
 $(document).ready(function(){

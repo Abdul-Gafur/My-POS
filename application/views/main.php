@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('');
         <title><?= $pageTitle ?></title>
 		
         <!-- Favicon -->
-        
+        <link rel="shortcut icon" href="<?=base_url()?>public/images/logo1.png">
         <!-- favicon ends -->
         
         <!-- LOAD FILES -->

@@ -107,7 +107,7 @@ class Administrators extends CI_Controller{
         $this->form_validation->set_rules('mobile2', 'Other number', ['trim', 'numeric', 'max_length[15]', 'min_length[11]']);
         $this->form_validation->set_rules('passwordOrig', 'Password', ['required', 'min_length[8]'], ['required'=>"Enter password"]);
         $this->form_validation->set_rules('passwordDup', 'Password Confirmation', ['required', 'matches[passwordOrig]'], ['required'=>"Please retype password"]);
-        
+
         if($this->form_validation->run() !== FALSE){
             /**
              * insert info into db
@@ -162,7 +162,8 @@ class Administrators extends CI_Controller{
         $this->form_validation->set_rules('mobile2', 'Other number', ['trim', 'numeric', 'max_length[15]', 'min_length[11]']);
         $this->form_validation->set_rules('email', 'E-mail', ['required', 'trim', 'valid_email', 'callback_crosscheckEmail['. $this->input->post('adminId', TRUE).']']);
         $this->form_validation->set_rules('role', 'Role', ['required', 'trim'], ['required'=>"required"]);
-        
+        $this->form_validation->set_rules('password', 'Password', ['required', 'trim', 'min_length[8]'], ['required'=>"Enter password"]);
+
         if($this->form_validation->run() !== FALSE){
             /**
              * update info in db
@@ -171,8 +172,10 @@ class Administrators extends CI_Controller{
 				
             $admin_id = $this->input->post('adminId', TRUE);
 
+			$hashedPassword = password_hash(set_value('password'), PASSWORD_BCRYPT);
+
             $updated = $this->admin->update($admin_id, set_value('firstName'), set_value('lastName'), set_value('email'),
-                    set_value('mobile1'), set_value('mobile2'), set_value('role'));
+                    set_value('mobile1'), $hashedPassword, set_value('mobile2'), set_value('role'));
             
             
             $json = $updated ? 

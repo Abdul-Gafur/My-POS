@@ -77,7 +77,7 @@ $query_builder = TRUE;
 $db['mysql'] = array(
 	'dsn'	=> 'mysql:hostname=localhost; dbname=mypos',
 	'hostname' => '',
-	'username' => 'root',
+	'username' => 'abdul',
 	'password' => '',
 	'database' => '',
 	'dbdriver' => 'pdo',

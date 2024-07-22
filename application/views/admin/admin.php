@@ -194,6 +194,14 @@ defined('BASEPATH') OR exit('');
                             <span class="help-block errMsg" id="mobile2EditErr"></span>
                         </div>
                     </div>
+					
+					<div class="row">
+                        <div class="form-group-sm col-sm-6">
+                            <label for='passwordEdit' class="control-label">New Password</label>
+                            <input type="text" id='passwordEdit' class="form-control checkField" placeholder="Enter new password">
+                            <span class="help-block errMsg" id="passwordEditErr"></span>
+                        </div>
+                    </div>
                     
                     <input type="hidden" id="adminId">
                 </form>

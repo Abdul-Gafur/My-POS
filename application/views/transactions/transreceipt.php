@@ -7,13 +7,11 @@ defined('BASEPATH') or exit('');
     <div class="col-xs-12 text-center">
         <center style='margin-bottom:5px'><img src="<?= base_url() ?>public/images/receipt_logo2.png" alt="logo"
                 class="img-responsive" width="45px"></center>
-        <span style="border: 2px solid black; padding-left: 20px; padding-right: 20px; font-size: 16px;">BIG
-            MOOMEN ENT</span>
+        <p style="border: 2px solid black; font-size: 16px;">EXTRA LIFE PHARMACY </p>
         <div style="font-size: 10px; font-weight: 700; line-height: 1.7;">
-            Dealers in Cosmetics, Provisions, Rice and General Suppliers of Goods <br>
-            LOCATION: Adjacent Butchers House, Wa-Market <br>
-            Post Office Box 621, Wa-UWR<br>
-            CONTACTS: 0543098004 / 0541915579
+            LOCATION: Hamile, A-line <br>
+            Post Office Box LW 43, Hamile<br>
+            CONTACTS: 0247667491 / 0207856467
         </div>
     </div>
 </div>
@@ -94,7 +92,7 @@ defined('BASEPATH') or exit('');
     </div>
 </div>
 <hr style='margin-top:5px; margin-bottom:0px'>
-<!-- <div class="row margin-top-5">
+<div class="row margin-top-5">
     <div class="col-xs-12">
         <b>Customer Name: <?= $cust_name ?></b>
     </div>
@@ -108,14 +106,14 @@ defined('BASEPATH') or exit('');
     <div class="col-xs-12">
         <b>Customer Email: <?= $cust_email ?></b>
     </div>
-</div> -->
+</div>
 <br>
 <div class="row">
     <b class="col-xs-12 text-center">GOODS PAID ARE NOT REFUNDABLE <br>THANK YOU</b>
 </div>
 <div>
-    <i style="font-size: 10px;"> System Developed By: Abdul-Gafur Saeed <br>
-        Contact: 054732237 / 0200957200
+    <i style="font-size: 10px;"> System Developed By: Tagnatek <br>
+        Contact: 0547322637 / 0242803924
     </i>
 </div>
 </div>
