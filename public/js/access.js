@@ -6,7 +6,7 @@ jQuery(document).ready(function () {
      Fullscreen background
      */
     $.backstretch([
-        "public/images/backgrounds/bg2.jpg", "public/images/backgrounds/22.jpg", "public/images/backgrounds/bg1.jpg", "public/images/backgrounds/bg.png",  
+        "public/images/backgrounds/img1.jpeg", "public/images/backgrounds/img2.jpeg", "public/images/backgrounds/img3.jpeg", "public/images/backgrounds/img1.jpeg",  
     ], {duration: 3000, fade: 750});
 });
 
