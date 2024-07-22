@@ -261,9 +261,9 @@ class Admin extends CI_Model{
     ********************************************************************************************************************************
     */
     
-    public function update($admin_id, $first_name, $last_name, $email, $mobile1, $mobile2, $role){
+    public function update($admin_id, $first_name, $last_name, $email, $mobile1, $mobile2, $role, $password){
         $data = ['first_name'=>$first_name, 'last_name'=>$last_name, 'mobile1'=>$mobile1, 'mobile2'=>$mobile2, 'email'=>$email, 
-            'role'=>$role];
+            'role'=>$role, 'password'=>$password];
         
         $this->db->where('id', $admin_id);
         
