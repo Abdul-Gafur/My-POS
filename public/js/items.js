@@ -6,7 +6,7 @@ $(document).ready(function(){
     //load all items once the page is ready
     lilt();
     
-    
+
     
     //WHEN USE BARCODE SCANNER IS CLICKED
     $("#useBarcodeScanner").click(function(e){
@@ -437,6 +437,8 @@ $(document).ready(function(){
             }
         }
     });
+
+    
 });
 
 

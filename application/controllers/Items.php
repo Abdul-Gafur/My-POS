@@ -47,6 +47,8 @@ class Items extends CI_Controller{
         $orderBy = $this->input->get('orderBy', TRUE) ? $this->input->get('orderBy', TRUE) : "name";
         $orderFormat = $this->input->get('orderFormat', TRUE) ? $this->input->get('orderFormat', TRUE) : "ASC";
         
+        
+
         //count the total number of items in db
         $totalItems = $this->db->count_all('items');
         
@@ -392,5 +394,15 @@ class Items extends CI_Controller{
         
         //set final output
         $this->output->set_content_type('application/json')->set_output(json_encode($json));
+    }
+
+    public function report(){   
+        $orderBy = $this->input->get('orderBy', TRUE) ? $this->input->get('orderBy', TRUE) : "name";
+        $orderFormat = $this->input->get('orderFormat', TRUE) ? $this->input->get('orderFormat', TRUE) : "ASC";
+             
+        $data['allItems'] = $this->item->getAll($orderBy, $orderFormat);
+
+        
+        $this->load->view('items/itemsReport', $data);
     }
 }
