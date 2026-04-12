@@ -13,6 +13,7 @@ class Items extends CI_Controller{
         parent::__construct();
         
         $this->genlib->checkLogin();
+        $this->permissions->requirePermission('items', 'view');
         
         $this->load->model(['item']);
     }
@@ -88,6 +89,7 @@ class Items extends CI_Controller{
     
     public function add(){
         $this->genlib->ajaxOnly();
+        $this->permissions->requirePermission('items', 'add');
         
         $this->load->library('form_validation');
 
@@ -156,7 +158,7 @@ class Items extends CI_Controller{
      * @param type $colValue
      */
     public function gettablecol($selColName, $whereColName, $colValue){
-        $a = $this->genmod->gettablecol('items', $selColName, $whereColName, $colValue);
+        $a = $this->genmod->getTableCol('items', $selColName, $whereColName, $colValue);
         
         $json['status'] = $a ? 1 : 0;
         $json['colVal'] = $a;
@@ -240,7 +242,8 @@ class Items extends CI_Controller{
             
             $action = $updateType === "deficit" ? "removed from" : "added to";//action that happened
             
-            $eventDesc = "<p>{$qty} quantities of {$this->genmod->gettablecol('items', 'name', 'id', $itemId)} was {$action} stock</p>
+            $item_name = $this->genmod->getTableCol('items', 'name', 'id', $itemId);
+            $eventDesc = "<p>{$qty} quantities of {$item_name} was {$action} stock</p>
                 Reason: <p>{$desc}</p>";
             
             //function header: addevent($event, $eventRowId, $eventDesc, $eventTable, $staffId)
@@ -404,5 +407,25 @@ class Items extends CI_Controller{
 
         
         $this->load->view('items/itemsReport', $data);
+    }
+    
+    /**
+     * Export items to PDF
+     */
+    public function exportPdf(){
+        $orderBy = $this->input->get('orderBy', TRUE) ?: "name";
+        $orderFormat = $this->input->get('orderFormat', TRUE) ?: "ASC";
+        
+        $data['allItems'] = $this->item->getAll($orderBy, $orderFormat);
+        $data['cum_total'] = $this->item->getItemsCumTotal();
+        $data['generated_date'] = date('F d, Y h:i A');
+        $data['filename'] = 'items_report_' . date('Y-m-d_His') . '.pdf';
+        
+        // Load PDF library and generate
+        $this->load->library('pdf');
+        
+        $html = $this->load->view('items/items_pdf', $data, TRUE);
+        
+        $this->pdf->generate($html, $data['filename'], true, 'A4', 'landscape');
     }
 }

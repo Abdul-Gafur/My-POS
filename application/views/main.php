@@ -8,10 +8,11 @@ defined('BASEPATH') OR exit('');
         <title><?= $pageTitle ?></title>
 		
         <!-- Favicon -->
-        <link rel="shortcut icon" href="<?=base_url()?>public/images/logo1.png">
+        <link rel="shortcut icon" href="<?=base_url()?>public/images/logo1f.png">
         <!-- favicon ends -->
         
         <!-- LOAD FILES -->
+        <script>var appRoot = "<?=base_url()?>";</script>
         <?php if((stristr($_SERVER['HTTP_HOST'], "localhost") !== FALSE) || (stristr($_SERVER['HTTP_HOST'], "192.168.") !== FALSE)|| (stristr($_SERVER['HTTP_HOST'], "127.0.0.") !== FALSE)): ?>
         <link rel="stylesheet" href="<?=base_url()?>public/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="<?=base_url()?>public/bootstrap/css/bootstrap-theme.min.css" media="screen">
@@ -42,6 +43,7 @@ defined('BASEPATH') OR exit('');
 
         <!-- custom JS -->
         <script src="<?= base_url() ?>public/js/main.js"></script>
+        <script src="<?= base_url() ?>public/js/darkmode.js"></script>
     </head>
 
     <body>
@@ -56,7 +58,7 @@ defined('BASEPATH') OR exit('');
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="<?=base_url()?>" style="margin-top:-15px">
-                        <img src="<?=base_url()?>public/images/logo_black2.png" alt="logo" class="img-responsive" width="49px">
+                        <img src="<?=base_url()?>public/images/logo1f.png" alt="logo" class="img-responsive" width="49px">
                     </a>
                 </div>
 
@@ -141,13 +143,13 @@ defined('BASEPATH') OR exit('');
                                     <strong>Account</strong>
                                 </li>
                                 <li class="divider"></li>
-                                <!-- <li>
-                                    <a href="#">
-                                        <i class="fa fa-gear fa-fw"></i> 
-                                        Settings
+                                <li>
+                                    <a href="#" id="resetPasswordBtn">
+                                        <i class="fa fa-key fa-fw"></i> 
+                                        Reset Password
                                     </a>
                                 </li>
-                                <li class="divider"></li>- -->
+                                <li class="divider"></li>
                                 <li><a href="<?= site_url('logout') ?>"><i class="fa fa-power-off"></i> Logout</a></li>
                             </ul>
                         </li>
@@ -192,19 +194,19 @@ defined('BASEPATH') OR exit('');
                                 Employees
                             </a>
                         </li> -->
-                        <!-- <li class="<?= $pageTitle == 'Reports' ? 'active' : '' ?>">
+                        <li class="<?= $pageTitle == 'Reports & Analytics' || $pageTitle == 'Reports' ? 'active' : '' ?>">
                             <a href="<?= site_url('reports') ?>">
                                 <i class="fa fa-newspaper-o"></i>
-                                Reports
+                                Reports & Analytics
                             </a>
                         </li>
                        
-                        <li class="<?= $pageTitle == 'Eventlog' ? 'active' : '' ?>">
-                            <a href="<?= site_url('Eventlog') ?>">
-                                <i class="fa fa-tasks"></i>
-                                Event Log
+                        <li class="<?= $pageTitle == 'Activity Log' ? 'active' : '' ?>">
+                            <a href="<?= site_url('activitylog') ?>">
+                                <i class="fa fa-history"></i>
+                                Activity Log
                             </a>
-                        </li>  -->
+                        </li>
                         
                         <li class="<?= $pageTitle == 'Database' ? 'active' : '' ?>">
                             <a href="<?= site_url('dbmanagement') ?>">
@@ -321,5 +323,7 @@ defined('BASEPATH') OR exit('');
             </div>
         </div>
         <!---end of Login Modal-->
+        
+        <?php $this->load->view('admin/reset_password_modal'); ?>
     </body>
 </html>

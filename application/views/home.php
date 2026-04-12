@@ -13,11 +13,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <title>Log in</title>
 
         <!-- Favicon -->
-        <link rel="shortcut icon" href="<?=base_url()?>public/images/logo1.png">
+        <link rel="shortcut icon" href="<?=base_url()?>public/images/logo1f.png">
         <!-- favicon ends --->
         
         <!--- LOAD FILES -->
-        <?php if($_SERVER['HTTP_HOST'] == "localhost" || (stristr($_SERVER['HTTP_HOST'], "192.168.") !== FALSE)|| (stristr($_SERVER['HTTP_HOST'], "127.0.0.") !== FALSE)): ?>
+        <script>var appRoot = "<?=base_url()?>";</script>
+        <?php if((stristr($_SERVER['HTTP_HOST'], "localhost") !== FALSE) || (stristr($_SERVER['HTTP_HOST'], "192.168.") !== FALSE)|| (stristr($_SERVER['HTTP_HOST'], "127.0.0.") !== FALSE)): ?>
         <link rel="stylesheet" href="<?=base_url()?>public/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="<?=base_url()?>public/font-awesome/css/font-awesome.min.css">
 
@@ -58,7 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="row">
                         <div class="col-sm-8 col-sm-offset-2 text">
                             <div style="font-size:100px">
-                                <h1><img src="<?=base_url()?>public/images/logo_black2.png" alt="1410-logo" height="150px"></h1>
+                                <h1><img src="<?=base_url()?>public/images/logo1f.png" alt="1410-logo" height="150px"></h1>
                             </div>
                         </div>
                     </div>
@@ -85,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     
                     <div class="row">
                         <div class="col-sm-12 text-center" style="color:white">
-                            Designed and Developed by Tagnatek
+                            Designed and Developed by Abdul-Gafur
                         </div>
                     </div>
                 </div>

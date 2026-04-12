@@ -94,6 +94,13 @@ class Genmod extends CI_Model{
      * @return boolean
      */
     public function addevent($event, $eventRowIdOrRef, $eventDesc, $eventTable, $staffId){
+        // Set dateAdded based on database platform
+        if($this->db->platform() == "sqlite3"){
+            $this->db->set('dateAdded', "datetime('now')", FALSE);
+        } else {
+            $this->db->set('dateAdded', "NOW()", FALSE);
+        }
+        
         $data = ['event'=>$event, 'eventRowIdOrRef'=>$eventRowIdOrRef, 'eventDesc'=>$eventDesc, 'eventTable'=>$eventTable, 'staffInCharge'=>$staffId];
         
         $this->db->insert('eventlog', $data);

@@ -12,9 +12,14 @@
         <div class="panel-heading">Items</div>
         <?php if($allItems): ?>
         <div class="table table-responsive">
-            <table class="table table-bordered table-striped table-hover" style="background-color: #f5f5f5">
+            <table class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
+                        <?php if($this->permissions->hasPermission('items', 'bulk_update') || $this->permissions->hasPermission('items', 'bulk_delete')): ?>
+                        <th style="width: 30px;">
+                            <input type="checkbox" id="selectAllItems" title="Select All">
+                        </th>
+                        <?php endif; ?>
                         <th>SN</th>
                         <th>ITEM NAME</th>
                         <th>ITEM CODE</th>
@@ -31,6 +36,11 @@
                 <tbody>
                     <?php foreach($allItems as $get): ?>
                     <tr>
+                        <?php if($this->permissions->hasPermission('items', 'bulk_update') || $this->permissions->hasPermission('items', 'bulk_delete')): ?>
+                        <td>
+                            <input type="checkbox" class="item-checkbox" data-item-id="<?=$get->id?>" title="Select Item">
+                        </td>
+                        <?php endif; ?>
                         <input type="hidden" value="<?=$get->id?>" class="curItemId">
                         <th class="itemSN"><?=$sn?>.</th>
                         <td><span id="itemName-<?=$get->id?>"><?=$get->name?></span></td>
@@ -44,9 +54,23 @@
                             <span id="itemQuantity-<?=$get->id?>"><?=$get->quantity?></span>
                         </td>
                         <td>GH₵<span id="itemPrice-<?=$get->id?>"><?=number_format($get->unitPrice, 2)?></span></td>
-                        <td><?=$this->genmod->gettablecol('transactions', 'SUM(quantity)', 'itemCode', $get->code)?></td>
                         <td>
-                        GH₵<?=number_format($this->genmod->gettablecol('transactions', 'SUM(totalPrice)', 'itemCode', $get->code), 2)?>
+                            <?php
+                            $this->db->select_sum('quantity');
+                            $this->db->where('itemCode', $get->code);
+                            $qty_query = $this->db->get('transactions');
+                            $totalSold = $qty_query->num_rows() > 0 && $qty_query->row()->quantity ? $qty_query->row()->quantity : 0;
+                            echo $totalSold;
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            $this->db->select_sum('totalPrice');
+                            $this->db->where('itemCode', $get->code);
+                            $price_query = $this->db->get('transactions');
+                            $totalEarned = $price_query->num_rows() > 0 && $price_query->row()->totalPrice ? $price_query->row()->totalPrice : 0;
+                            echo 'GH₵' . number_format($totalEarned, 2);
+                            ?>
                         </td>
                         <td><a class="pointer updateStock" id="stock-<?=$get->id?>">Update Quantity</a></td>
                         <td class="text-center text-primary">

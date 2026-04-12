@@ -103,6 +103,65 @@ class Item extends CI_Model{
         }
     }
     
+    /**
+     * Enhanced search with filters
+     * @param string $search_value
+     * @param string $category
+     * @param float $price_min
+     * @param float $price_max
+     * @param string $stock_status (all, in_stock, low_stock, out_of_stock)
+     * @return boolean
+     */
+    public function enhancedSearch($search_value = '', $category = '', $price_min = '', $price_max = '', $stock_status = 'all'){
+        $this->db->select('*');
+        
+        // Text search
+        if (!empty($search_value)) {
+            $this->db->group_start();
+            $this->db->like('name', $search_value);
+            $this->db->or_like('code', $search_value);
+            $this->db->or_like('description', $search_value);
+            $this->db->group_end();
+        }
+        
+        // Category filter (if category column exists)
+        if (!empty($category)) {
+            $this->db->where('category', $category);
+        }
+        
+        // Price range filter
+        if (!empty($price_min)) {
+            $this->db->where('unitPrice >=', floatval($price_min));
+        }
+        if (!empty($price_max)) {
+            $this->db->where('unitPrice <=', floatval($price_max));
+        }
+        
+        // Stock status filter
+        switch ($stock_status) {
+            case 'in_stock':
+                $this->db->where('quantity >', 0);
+                break;
+            case 'low_stock':
+                // Assuming low stock is less than 10
+                $this->db->where('quantity >', 0);
+                $this->db->where('quantity <', 10);
+                break;
+            case 'out_of_stock':
+                $this->db->where('quantity', 0);
+                break;
+        }
+        
+        $this->db->order_by('name', 'ASC');
+        $run_q = $this->db->get('items');
+        
+        if($run_q->num_rows() > 0){
+            return $run_q->result();
+        }
+        
+        return FALSE;
+    }
+    
     
     /*
     ********************************************************************************************************************************
@@ -165,9 +224,9 @@ class Item extends CI_Model{
     
     
    public function newstock($itemId, $qty){
-       $q = "UPDATE items SET quantity = quantity + $qty WHERE id = ?";
+       $q = "UPDATE items SET quantity = quantity + ? WHERE id = ?";
        
-       $this->db->query($q, [$itemId]);
+       $this->db->query($q, [$qty, $itemId]);
        
        if($this->db->affected_rows()){
            return TRUE;
@@ -188,9 +247,9 @@ class Item extends CI_Model{
     */
    
    public function deficit($itemId, $qty){
-       $q = "UPDATE items SET quantity = quantity - $qty WHERE id = ?";
+       $q = "UPDATE items SET quantity = quantity - ? WHERE id = ?";
        
-       $this->db->query($q, [$itemId]);
+       $this->db->query($q, [$qty, $itemId]);
        
        if($this->db->affected_rows()){
            return TRUE;

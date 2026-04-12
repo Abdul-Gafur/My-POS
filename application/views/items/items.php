@@ -11,6 +11,13 @@ defined('BASEPATH') or exit('');
                     <div class="col-sm-2 form-inline form-group-sm">
                         <button class="btn btn-primary btn-sm" id='createItem'>Add New Item</button>
                     </div>
+                    <?php if($this->permissions->hasPermission('items', 'import')): ?>
+                    <div class="col-sm-2 form-inline form-group-sm">
+                        <button class="btn btn-info btn-sm" id='bulkOperationsBtn'>
+                            <i class="fa fa-database"></i> Bulk Operations
+                        </button>
+                    </div>
+                    <?php endif; ?>
                     <div class="col-sm-2">
                         <span class="pointer text-primary">
                             <button class='btn btn-primary btn-sm' id='clickToGen'>
@@ -52,6 +59,38 @@ defined('BASEPATH') or exit('');
                     <div class="col-sm-3 form-inline form-group-sm">
                         <label for='itemSearch'><i class="fa fa-search"></i></label>
                         <input type="search" id="itemSearch" class="form-control" placeholder="Search Items">
+                        <button class="btn btn-default btn-sm" id="advancedSearchToggle" title="Advanced Search">
+                            <i class="fa fa-filter"></i>
+                        </button>
+                    </div>
+                    <div class="col-sm-12 hidden" id="advancedSearchPanel" style="margin-top: 10px; padding: 15px; background-color: #f9f9f9; border-radius: 4px;">
+                        <div class="row">
+                            <div class="col-sm-3 form-group-sm">
+                                <label>Price Range</label>
+                                <div class="input-group">
+                                    <input type="number" id="priceMin" class="form-control" placeholder="Min" min="0" step="0.01">
+                                    <span class="input-group-addon">-</span>
+                                    <input type="number" id="priceMax" class="form-control" placeholder="Max" min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-sm-3 form-group-sm">
+                                <label>Stock Status</label>
+                                <select id="stockStatusFilter" class="form-control">
+                                    <option value="all">All</option>
+                                    <option value="in_stock">In Stock</option>
+                                    <option value="low_stock">Low Stock</option>
+                                    <option value="out_of_stock">Out of Stock</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 form-group-sm">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-primary btn-sm form-control" id="applyFilters">Apply Filters</button>
+                            </div>
+                            <div class="col-sm-3 form-group-sm">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-default btn-sm form-control" id="clearFilters">Clear Filters</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -259,7 +298,11 @@ defined('BASEPATH') or exit('');
 </div>
 
 <!--end of modal-->
+
+<?php $this->load->view('items/bulk_operations_modal'); ?>
+
 <script src="<?= base_url() ?>public/js/items.js"></script>
+<script src="<?= base_url() ?>public/js/bulk_operations.js"></script>
 <script>
     $(document).ready(function() {
         //WHEN "GENERATE REPORT" BUTTON IS CLICKED

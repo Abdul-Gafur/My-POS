@@ -172,88 +172,117 @@ $(document).ready(function(){
     $("#editAdminSubmit").click(function(e){
         e.preventDefault();
         
-        if(formChanges("editAdminForm")){
-            //reset all error msgs in case they are set
-            changeInnerHTML(['firstNameEditErr', 'lastNameEditErr', 'emailEditErr', 'roleEditErr', 'mobile1Err', 'mobile2Err', 'passwordEditErr'], "");
+        //reset all error msgs in case they are set
+        changeInnerHTML(['firstNameEditErr', 'lastNameEditErr', 'emailEditErr', 'roleEditErr', 'mobile1EditErr', 'mobile2EditErr', 'passwordEditErr', 'passwordEditConfirmErr'], "");
 
-            var firstName = $("#firstNameEdit").val();
-            var lastName = $("#lastNameEdit").val();
-            var email = $("#emailEdit").val();
-            var mobile1 = $("#mobile1Edit").val();
-            var mobile2 = $("#mobile2Edit").val();
-            var role = $("#roleEdit").val();
-            var adminId = $("#adminId").val();
-			var password = $("#passwordEdit").val();
+        var firstName = $("#firstNameEdit").val();
+        var lastName = $("#lastNameEdit").val();
+        var email = $("#emailEdit").val();
+        var mobile1 = $("#mobile1Edit").val();
+        var mobile2 = $("#mobile2Edit").val();
+        var role = $("#roleEdit").val();
+        var adminId = $("#adminId").val();
+        var password = $("#passwordEdit").val();
 
-            //ensure all required fields are filled
-            if(!firstName || !lastName || !email || !role || !mobile1 || !password){
-                !firstName ? changeInnerHTML('firstNameEditErr', "required") : "";
-                !lastName ? changeInnerHTML('lastNameEditErr', "required") : "";
-                !email ? changeInnerHTML('emailEditErr', "required") : "";
-                !mobile1 ? changeInnerHTML('mobile1EditErr', "required") : "";
-                !role ? changeInnerHTML('roleEditErr', "required") : "";
-				!password ? changeInnerHTML('passwordEditErr', "required") : "";
+        //ensure all required fields are filled (password is optional)
+        if(!firstName || !lastName || !email || !role || !mobile1 || !adminId){
+            !firstName ? changeInnerHTML('firstNameEditErr', "required") : "";
+            !lastName ? changeInnerHTML('lastNameEditErr', "required") : "";
+            !email ? changeInnerHTML('emailEditErr', "required") : "";
+            !mobile1 ? changeInnerHTML('mobile1EditErr', "required") : "";
+            !role ? changeInnerHTML('roleEditErr', "required") : "";
+            !adminId ? $("#fMsgEdit").css('color', 'red').text("Admin ID missing. Please close and try again.") : "";
 
-                return;
-            }
-
-            if(!adminId){
-                $("#fMsgEdit").text("An unexpected error occured while trying to update administrator's details");
-                return;
-            }
-
-            //display message telling user action is being processed
-            $("#fMsgEditIcon").attr('class', spinnerClass);
-            $("#fMsgEdit").text(" Updating details...");
-
-            //make ajax request if all is well
-            $.ajax({
-                method: "POST",
-                url: appRoot+"administrators/update",
-                data: {firstName:firstName, lastName:lastName, email:email, role:role, mobile1:mobile1, mobile2:mobile2, adminId:adminId, password:password}
-            }).done(function(returnedData){
-                $("#fMsgEditIcon").removeClass();//remove spinner
-
-                if(returnedData.status === 1){
-                    $("#fMsgEdit").css('color', 'green').text(returnedData.msg);
-
-                    //reset the form and close the modal
-                    setTimeout(function(){
-                        $("#fMsgEdit").text("");
-                        $("#editAdminModal").modal('hide');
-                    }, 1000);
-
-                    //reset all error msgs in case they are set
-                    changeInnerHTML(['firstNameEditErr', 'lastNameEditErr', 'emailEditErr', 'roleEditErr', 'mobile1Err', 'mobile2Err', 'passwordEditErr'], "");
-
-                    //refresh admin list table
-                    laad_();
-
-                }
-
-                else{
-                    //display error message returned
-                    $("#fMsgEdit").css('color', 'red').html(returnedData.msg);
-
-                    //display individual error messages if applied
-                    $("#firstNameEditErr").html(returnedData.firstName);
-                    $("#lastNameEditErr").html(returnedData.lastName);
-                    $("#emailEditErr").html(returnedData.email);
-                    $("#mobile1EditErr").html(returnedData.mobile1);
-                    $("#mobile2EditErr").html(returnedData.mobile2);
-                    $("#roleEditErr").html(returnedData.role);
-					$("#passwordEditErr").html(returnedDAta.password);
-                }
-            }).fail(function(){
-                    if(!navigator.onLine){
-                        $("#fMsgEdit").css('color', 'red').html("Network error! Pls check your network connection");
-                    }
-                });
+            return;
         }
         
-        else{
-            $("#fMsgEdit").html("No changes were made");
+        // Validate password only if provided and checkbox is checked
+        if($("#changePasswordCheck").is(':checked')){
+            if(!password || password.length < 8){
+                changeInnerHTML('passwordEditErr', "Password must be at least 8 characters");
+                return;
+            }
+            
+            var passwordConfirm = $("#passwordEditConfirm").val();
+            if(password !== passwordConfirm){
+                changeInnerHTML('passwordEditConfirmErr', "Passwords do not match");
+                return;
+            }
         }
+
+        //display message telling user action is being processed
+        $("#fMsgEditIcon").attr('class', spinnerClass);
+        $("#fMsgEdit").css('color', 'black').text(" Updating details...");
+
+        //make ajax request if all is well
+        // Only send password if it was provided and checkbox is checked
+        var updateData = {
+            firstName:firstName, 
+            lastName:lastName, 
+            email:email, 
+            role:role, 
+            mobile1:mobile1, 
+            mobile2:mobile2, 
+            adminId:adminId
+        };
+        
+        // Only include password if user wants to change it
+        if($("#changePasswordCheck").is(':checked') && password){
+            updateData.password = password;
+        }
+        
+        $.ajax({
+            method: "POST",
+            url: appRoot+"administrators/update",
+            data: updateData
+        }).done(function(returnedData){
+            $("#fMsgEditIcon").removeClass();//remove spinner
+
+            if(returnedData.status === 1){
+                $("#fMsgEdit").css('color', 'green').text(returnedData.msg);
+
+                //reset the form and close the modal
+                setTimeout(function(){
+                    $("#fMsgEdit").text("");
+                    $("#editAdminModal").modal('hide');
+                    // Reset form and password fields
+                    $("#changePasswordCheck").prop('checked', false);
+                    $('#passwordChangeFields').hide();
+                    $('#passwordEdit, #passwordEditConfirm').val('');
+                }, 1000);
+
+                //reset all error msgs in case they are set
+                changeInnerHTML(['firstNameEditErr', 'lastNameEditErr', 'emailEditErr', 'roleEditErr', 'mobile1EditErr', 'mobile2EditErr', 'passwordEditErr', 'passwordEditConfirmErr'], "");
+
+                //refresh admin list table
+                laad_();
+
+            }
+
+            else{
+                //display error message returned
+                $("#fMsgEdit").css('color', 'red').html(returnedData.msg || "Update failed. Please check the errors below.");
+
+                //display individual error messages if applied
+                if(returnedData.firstName) $("#firstNameEditErr").html(returnedData.firstName);
+                if(returnedData.lastName) $("#lastNameEditErr").html(returnedData.lastName);
+                if(returnedData.email) $("#emailEditErr").html(returnedData.email);
+                if(returnedData.mobile1) $("#mobile1EditErr").html(returnedData.mobile1);
+                if(returnedData.mobile2) $("#mobile2EditErr").html(returnedData.mobile2);
+                if(returnedData.role) $("#roleEditErr").html(returnedData.role);
+                if(returnedData.password) {
+                    $("#passwordEditErr").html(returnedData.password);
+                }
+            }
+        }).fail(function(xhr){
+                $("#fMsgEditIcon").removeClass();
+                if(!navigator.onLine){
+                    $("#fMsgEdit").css('color', 'red').html("Network error! Pls check your network connection");
+                } else {
+                    $("#fMsgEdit").css('color', 'red').html("Request failed. Please try again.");
+                    console.error("Update failed:", xhr);
+                }
+            });
     });
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -384,14 +413,12 @@ $(document).ready(function(){
         $("#adminId").val(adminId);
         
         //get info of admin with adminId and prefill the form with it
-        //alert($(this).siblings(".adminEmail").children('a').html());
         var firstName = $(this).siblings(".firstName").html();
         var lastName = $(this).siblings(".lastName").html();
         var role = $(this).siblings(".adminRole").html();
         var email = $(this).siblings(".adminEmail").children('a').html();
         var mobile1 = $(this).siblings(".adminMobile1").html();
         var mobile2 = $(this).siblings(".adminMobile2").html();
-		var password = $(this).siblings(".password").html();
         
         //prefill the form fields
         $("#firstNameEdit").val(firstName);
@@ -400,9 +427,61 @@ $(document).ready(function(){
         $("#mobile1Edit").val(mobile1);
         $("#mobile2Edit").val(mobile2);
         $("#roleEdit").val(role);
-		$("#passwordEdit").val(password);
+        
+        // Reset password fields
+        $("#passwordEdit").val('');
+        $("#passwordEditConfirm").val('');
+        $("#changePasswordCheck").prop('checked', false);
+        $('#passwordChangeFields').hide();
+        $('#passwordEditErr, #passwordEditConfirmErr').html('');
+        
+        // Clear any previous messages
+        $("#fMsgEdit").text('');
+        $("#fMsgEditIcon").removeClass();
+        changeInnerHTML(['firstNameEditErr', 'lastNameEditErr', 'emailEditErr', 'roleEditErr', 'mobile1EditErr', 'mobile2EditErr', 'passwordEditErr', 'passwordEditConfirmErr'], "");
+        
+        // Reset form defaults for formChanges detection
+        setTimeout(function(){
+            var form = document.getElementById('editAdminForm');
+            if(form) {
+                for(var i = 0; i < form.elements.length; i++){
+                    var el = form.elements[i];
+                    if(el.type !== 'button' && el.type !== 'submit' && el.type !== 'reset'){
+                        if(el.type === 'checkbox' || el.type === 'radio'){
+                            el.defaultChecked = el.checked;
+                        } else {
+                            el.defaultValue = el.value;
+                        }
+                    }
+                }
+            }
+        }, 100);
         
         $("#editAdminModal").modal('show');
+    });
+    
+    // Toggle password change fields
+    $(document).on('change', '#changePasswordCheck', function(){
+        if($(this).is(':checked')){
+            $('#passwordChangeFields').slideDown();
+            $('#passwordEdit, #passwordEditConfirm').addClass('checkField');
+        } else {
+            $('#passwordChangeFields').slideUp();
+            $('#passwordEdit, #passwordEditConfirm').val('').removeClass('checkField');
+            $('#passwordEditErr, #passwordEditConfirmErr').html('');
+        }
+    });
+    
+    // Password confirmation check
+    $('#passwordEditConfirm').on('keyup', function(){
+        var password = $('#passwordEdit').val();
+        var confirm = $(this).val();
+        
+        if(confirm && password !== confirm){
+            $('#passwordEditConfirmErr').html('Passwords do not match').css('color', 'red');
+        } else if(confirm && password === confirm){
+            $('#passwordEditConfirmErr').html('').css('color', '');
+        }
     });
     
 });

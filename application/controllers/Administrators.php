@@ -183,7 +183,11 @@ class Administrators extends CI_Controller
         $this->form_validation->set_rules('mobile2', 'Other number', ['trim', 'numeric', 'max_length[15]', 'min_length[11]']);
         $this->form_validation->set_rules('email', 'E-mail', ['required', 'trim', 'valid_email', 'callback_crosscheckEmail[' . $this->input->post('adminId', TRUE) . ']']);
         $this->form_validation->set_rules('role', 'Role', ['required', 'trim'], ['required' => "required"]);
-        $this->form_validation->set_rules('password', 'Password', ['required', 'trim', 'min_length[8]'], ['required' => "Enter password"]);
+        // Password is optional - only validate if provided
+        $password = $this->input->post('password', TRUE);
+        if (!empty($password)) {
+            $this->form_validation->set_rules('password', 'Password', ['trim', 'min_length[8]']);
+        }
 
         if ($this->form_validation->run() !== FALSE) {
             /**
@@ -193,7 +197,12 @@ class Administrators extends CI_Controller
 
             $admin_id = $this->input->post('adminId', TRUE);
 
-            $hashedPassword = password_hash(set_value('password'), PASSWORD_BCRYPT);
+            // Only hash password if it's provided
+            $password = $this->input->post('password', TRUE);
+            $hashedPassword = '';
+            if (!empty($password)) {
+                $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            }
 
             $updated = $this->admin->update(
                 $admin_id,
@@ -203,10 +212,25 @@ class Administrators extends CI_Controller
                 set_value('mobile1'),
                 set_value('mobile2'),
                 set_value('role'),
-                $hashedPassword,
-
+                $hashedPassword
             );
-
+            
+            // Log activity
+            if ($updated) {
+                $this->db->select('first_name, last_name');
+                $this->db->where('id', $admin_id);
+                $admin_query = $this->db->get('admin');
+                $adminName = 'Unknown';
+                if ($admin_query->num_rows() > 0) {
+                    $admin_data = $admin_query->row();
+                    $adminName = $admin_data->first_name . ' ' . $admin_data->last_name;
+                }
+                $desc = "Admin profile updated: " . $adminName;
+                if (!empty($password)) {
+                    $desc .= " (Password changed)";
+                }
+                $this->genmod->addevent("Admin Profile Update", $admin_id, $desc, "admin", $this->session->admin_id);
+            }
 
             $json = $updated ?
                 ['status' => 1, 'msg' => "Admin info successfully updated"]
@@ -329,5 +353,78 @@ class Administrators extends CI_Controller
 
             return FALSE;
         }
+    }
+    
+    /**
+     * Reset admin password (for current user or by admin)
+     */
+    public function resetPassword() {
+        $this->genlib->ajaxOnly();
+        
+        $admin_id = $this->input->post('admin_id', TRUE);
+        $current_password = $this->input->post('current_password', TRUE);
+        $new_password = $this->input->post('new_password', TRUE);
+        $confirm_password = $this->input->post('confirm_password', TRUE);
+        
+        // If no admin_id provided, assume current user
+        if (empty($admin_id)) {
+            $admin_id = $this->session->admin_id;
+        }
+        
+        // Validate inputs
+        if (empty($new_password) || strlen($new_password) < 8) {
+            $json = ['status' => 0, 'msg' => 'New password must be at least 8 characters'];
+            $this->output->set_content_type('application/json')->set_output(json_encode($json));
+            return;
+        }
+        
+        if ($new_password !== $confirm_password) {
+            $json = ['status' => 0, 'msg' => 'Passwords do not match'];
+            $this->output->set_content_type('application/json')->set_output(json_encode($json));
+            return;
+        }
+        
+        // If resetting own password, verify current password
+        if ($admin_id == $this->session->admin_id && !empty($current_password)) {
+            $this->db->select('password');
+            $this->db->where('id', $admin_id);
+            $pwd_query = $this->db->get('admin');
+            if ($pwd_query->num_rows() === 0) {
+                $json = ['status' => 0, 'msg' => 'Admin not found'];
+                $this->output->set_content_type('application/json')->set_output(json_encode($json));
+                return;
+            }
+            $current_password_hash = $pwd_query->row()->password;
+            if (!password_verify($current_password, $current_password_hash)) {
+                $json = ['status' => 0, 'msg' => 'Current password is incorrect'];
+                $this->output->set_content_type('application/json')->set_output(json_encode($json));
+                return;
+            }
+        }
+        
+        // Update password
+        $hashedPassword = password_hash($new_password, PASSWORD_BCRYPT);
+        $this->db->where('id', $admin_id);
+        $this->db->update('admin', ['password' => $hashedPassword]);
+        
+        if ($this->db->affected_rows() > 0) {
+            // Log activity
+            $this->db->select('first_name, last_name');
+            $this->db->where('id', $admin_id);
+            $admin_query = $this->db->get('admin');
+            $adminName = 'Unknown';
+            if ($admin_query->num_rows() > 0) {
+                $admin_data = $admin_query->row();
+                $adminName = $admin_data->first_name . ' ' . $admin_data->last_name;
+            }
+            $desc = "Password reset for: " . $adminName;
+            $this->genmod->addevent("Password Reset", $admin_id, $desc, "admin", $this->session->admin_id);
+            
+            $json = ['status' => 1, 'msg' => 'Password reset successfully'];
+        } else {
+            $json = ['status' => 0, 'msg' => 'Failed to reset password'];
+        }
+        
+        $this->output->set_content_type('application/json')->set_output(json_encode($json));
     }
 }

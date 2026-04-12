@@ -75,7 +75,14 @@ class Search extends CI_Controller{
     
     
     public function itemSearch(){
-        $data['allItems'] = $this->item->itemsearch($this->value);
+        $search_value = $this->input->get('v', TRUE);
+        $category = $this->input->get('category', TRUE);
+        $price_min = $this->input->get('price_min', TRUE);
+        $price_max = $this->input->get('price_max', TRUE);
+        $stock_status = $this->input->get('stock_status', TRUE);
+        
+        // Enhanced search with filters
+        $data['allItems'] = $this->item->enhancedSearch($search_value, $category, $price_min, $price_max, $stock_status);
         $data['sn'] = 1;
         $data['cum_total'] = $this->item->getItemsCumTotal();
         
@@ -83,6 +90,44 @@ class Search extends CI_Controller{
         
         //set final output
         $this->output->set_content_type('application/json')->set_output(json_encode($json));
+    }
+    
+    /**
+     * Smart search suggestions
+     */
+    public function getSuggestions(){
+        $query = $this->input->get('q', TRUE);
+        $type = $this->input->get('type', TRUE) ?: 'items';
+        
+        $suggestions = [];
+        
+        if ($type === 'items' && !empty($query)) {
+            $items = $this->item->itemsearch($query);
+            if ($items) {
+                foreach ($items as $item) {
+                    $suggestions[] = [
+                        'id' => $item->id,
+                        'text' => $item->name . ' (' . $item->code . ')',
+                        'code' => $item->code,
+                        'price' => $item->unitPrice,
+                        'quantity' => $item->quantity
+                    ];
+                }
+            }
+        } elseif ($type === 'transactions') {
+            $transactions = $this->transaction->transSearch($query);
+            if ($transactions) {
+                foreach ($transactions as $trans) {
+                    $suggestions[] = [
+                        'id' => $trans->ref,
+                        'text' => $trans->ref . ' - ' . date('M d, Y', strtotime($trans->transDate)),
+                        'ref' => $trans->ref
+                    ];
+                }
+            }
+        }
+        
+        $this->output->set_content_type('application/json')->set_output(json_encode(['suggestions' => $suggestions]));
     }
     
     /*

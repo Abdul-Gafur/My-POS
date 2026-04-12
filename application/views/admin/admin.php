@@ -93,7 +93,11 @@ defined('BASEPATH') OR exit('');
                             <label for='role' class="control-label">Role</label>
                             <select class="form-control checkField" id='role'>
                                 <option value=''>Role</option>
-                                <option value='Super'>Super</option>
+                                <option value='Super'>Super Admin</option>
+                                <option value='Admin'>Admin</option>
+                                <option value='Manager'>Manager</option>
+                                <option value='Cashier'>Cashier</option>
+                                <option value='Inventory Clerk'>Inventory Clerk</option>
                                 <option value='Basic'>Basic</option>
                             </select>
                             <span class="help-block errMsg" id="roleErr"></span>
@@ -175,7 +179,11 @@ defined('BASEPATH') OR exit('');
                             <label for='roleEdit' class="control-label">Role</label>
                             <select class="form-control checkField" id='roleEdit'>
                                 <option value=''>Role</option>
-                                <option value='Super'>Super</option>
+                                <option value='Super'>Super Admin</option>
+                                <option value='Admin'>Admin</option>
+                                <option value='Manager'>Manager</option>
+                                <option value='Cashier'>Cashier</option>
+                                <option value='Inventory Clerk'>Inventory Clerk</option>
                                 <option value='Basic'>Basic</option>
                             </select>
                             <span class="help-block errMsg" id="roleEditErr"></span>
@@ -196,10 +204,25 @@ defined('BASEPATH') OR exit('');
                     </div>
 					
 					<div class="row">
+                        <div class="form-group-sm col-sm-12">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="changePasswordCheck">
+                                    Change Password
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="passwordChangeFields" style="display: none;">
                         <div class="form-group-sm col-sm-6">
                             <label for='passwordEdit' class="control-label">New Password</label>
-                            <input type="text" id='passwordEdit' class="form-control checkField" placeholder="Enter new password">
+                            <input type="password" id='passwordEdit' class="form-control" placeholder="Enter new password (min 8 characters)">
                             <span class="help-block errMsg" id="passwordEditErr"></span>
+                        </div>
+                        <div class="form-group-sm col-sm-6">
+                            <label for='passwordEditConfirm' class="control-label">Confirm Password</label>
+                            <input type="password" id='passwordEditConfirm' class="form-control" placeholder="Confirm new password">
+                            <span class="help-block errMsg" id="passwordEditConfirmErr"></span>
                         </div>
                     </div>
                     

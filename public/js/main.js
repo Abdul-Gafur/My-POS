@@ -1,6 +1,6 @@
 'use strict';
 
-var appRoot = setAppRoot("elp", "elp");
+var appRoot = window.appRoot ? window.appRoot : setAppRoot("elp", "elp");
 var spinnerClass = 'fa fa-spinner faa-spin animated';
 
 $(document).ready(function(){

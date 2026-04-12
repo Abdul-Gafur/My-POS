@@ -6,7 +6,11 @@ jQuery(document).ready(function () {
      Fullscreen background
      */
     $.backstretch([
-        "public/images/backgrounds/img1.jpeg", "public/images/backgrounds/img2.jpeg", "public/images/backgrounds/img3.jpeg", "public/images/backgrounds/img1.jpeg",  
+        appRoot + "public/images/backgrounds/22.jpg", 
+        appRoot + "public/images/backgrounds/pipes-bg.png", 
+        appRoot + "public/images/backgrounds/pipes-bg2.png", 
+        appRoot + "public/images/backgrounds/steel-ware-bg1.png", 
+        appRoot + "public/images/backgrounds/steel-ware-bg2.png"
     ], {duration: 3000, fade: 750});
 });
 

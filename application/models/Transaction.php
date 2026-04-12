@@ -55,7 +55,7 @@ class Transaction extends CI_Model {
             
             $this->db->join('admin', 'transactions.staffId = admin.id', 'LEFT');
             $this->db->limit($limit, $start);
-            $this->db->group_by('ref');
+            $this->db->group_by(['ref', 'totalMoneySpent', 'modeOfPayment', 'staffId', 'transDate', 'lastUpdated', 'amountTendered', 'changeDue', 'cust_name', 'cust_phone', 'cust_email']);
             $this->db->order_by($orderBy, $orderFormat);
 
             $run_q = $this->db->get('transactions');
@@ -166,7 +166,7 @@ class Transaction extends CI_Model {
         $this->db->like('ref', $value);
         $this->db->or_like('itemName', $value);
         $this->db->or_like('itemCode', $value);
-        $this->db->group_by('ref');
+        $this->db->group_by(['ref', 'totalMoneySpent', 'modeOfPayment', 'staffId', 'transDate', 'lastUpdated', 'amountTendered', 'changeDue', 'cust_name', 'cust_phone', 'cust_email']);
 
         $run_q = $this->db->get('transactions');
 
@@ -325,7 +325,7 @@ class Transaction extends CI_Model {
 
             $this->db->order_by('transactions.transId', 'DESC');
 
-            $this->db->group_by('ref');
+            $this->db->group_by(['ref', 'totalMoneySpent', 'modeOfPayment', 'staffId', 'transDate', 'lastUpdated', 'amountTendered', 'changeDue', 'cust_name', 'cust_phone', 'cust_email']);
 
             $run_q = $this->db->get('transactions');
         }
