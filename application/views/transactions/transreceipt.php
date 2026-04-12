@@ -7,14 +7,15 @@ defined('BASEPATH') or exit('');
 <div class="row">
     <div class="col-xs-12 text-center" style="border-bottom: 2px dashed #333; padding-bottom: 10px; margin-bottom: 10px;">
         <center style='margin-bottom:8px'>
-            <img src="<?= base_url() ?>public/images/receipt_logo2.png" alt="logo"
-                class="img-responsive" style="max-width: 50px; margin: 0 auto;">
+            <img src="<?= base_url() ?>public/images/baba_makyeri_logo.png" alt="logo"
+                class="img-responsive" style="max-width: 100px; margin: 0 auto;">
         </center>
-        <h3 style="margin: 5px 0; font-size: 18px; font-weight: bold; color: #333;">EXTRA LIFE PHARMACY</h3>
+        <h3 style="margin: 5px 0; font-size: 18px; font-weight: bold; color: #333;">BABA MAKYERI ENTERPRISE</h3>
         <div style="font-size: 11px; font-weight: 600; line-height: 1.6; color: #666;">
-            <strong>LOCATION:</strong> Hamile, A-line <br>
-            Post Office Box LW 43, Hamile<br>
-            <strong>CONTACTS:</strong> 0247667491 / 0207856467
+            Dealers in Steel plates, Pipes & Door frames etc. <br>
+            <strong>LOC:</strong> Zongo Central Mosque/Wa Poly Road <br>
+            P.O. Box 276, Wa - UWR<br>
+            <strong>TEL:</strong> 0208395376 / 0247526221 / 0598602869
         </div>
     </div>
 </div>

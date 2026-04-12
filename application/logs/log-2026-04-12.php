@@ -154,3 +154,9 @@ AND DATE(transactions.transDate) <= '2026-04-12'
 GROUP BY `ref`
 ORDER BY `transactions`.`transId` DESC
 ERROR - 2026-04-12 09:45:18 --> Severity: Warning --> file_get_contents(/Applications/MAMP/htdocs/elp/system/sqlite/1410inventory.sqlite): failed to open stream: No such file or directory /Applications/MAMP/htdocs/elp/application/controllers/Misc.php 73
+ERROR - 2026-04-12 10:55:43 --> 404 Page Not Found: Timesheet/index
+ERROR - 2026-04-12 10:55:50 --> 404 Page Not Found: Contract/index
+ERROR - 2026-04-12 10:55:52 --> 404 Page Not Found: Contract/contract-types
+ERROR - 2026-04-12 10:55:54 --> 404 Page Not Found: Form-builder/forms
+ERROR - 2026-04-12 10:55:58 --> 404 Page Not Found: Hrm/set-salary
+ERROR - 2026-04-12 10:56:00 --> 404 Page Not Found: Goal/categories

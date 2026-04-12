@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <title>Log in</title>
 
         <!-- Favicon -->
-        <link rel="shortcut icon" href="<?=base_url()?>public/images/logo1f.png">
+        <link rel="shortcut icon" href="<?=base_url()?>public/images/baba_makyeri_logo.png">
         <!-- favicon ends --->
         
         <!--- LOAD FILES -->
@@ -59,7 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="row">
                         <div class="col-sm-8 col-sm-offset-2 text">
                             <div style="font-size:100px">
-                                <h1><img src="<?=base_url()?>public/images/logo1f.png" alt="1410-logo" height="150px"></h1>
+                                <h1><img src="<?=base_url()?>public/images/baba_makyeri_logo.png" alt="BABA MAKYERI logo" height="150px"></h1>
                             </div>
                         </div>
                     </div>

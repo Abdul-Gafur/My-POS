@@ -11,7 +11,7 @@ $total_earned = 0;
         <title>Transaction Report</title>
 		
         <!-- Favicon -->
-        <link rel="shortcut icon" href="<?=base_url()?>public/images/logo1f.png">
+        <link rel="shortcut icon" href="<?=base_url()?>public/images/baba_makyeri_logo.png">
         <!-- favicon ends --->
         
         <!--- LOAD FILES -->
@@ -101,7 +101,7 @@ $total_earned = 0;
                 </div>
                 
                 <div class="col-xs-6 text-right">
-                    <h4>Total Earned: $<?=number_format($total_earned, 2)?></h4>
+                    <h4>Total Earned: GH₵<?=number_format($total_earned, 2)?></h4>
                 </div>
             </div>
         </div>

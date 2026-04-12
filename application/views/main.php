@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('');
         <title><?= $pageTitle ?></title>
 		
         <!-- Favicon -->
-        <link rel="shortcut icon" href="<?=base_url()?>public/images/logo1f.png">
+        <link rel="shortcut icon" href="<?=base_url()?>public/images/baba_makyeri_logo.png">
         <!-- favicon ends -->
         
         <!-- LOAD FILES -->
@@ -58,7 +58,7 @@ defined('BASEPATH') OR exit('');
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="<?=base_url()?>" style="margin-top:-15px">
-                        <img src="<?=base_url()?>public/images/logo1f.png" alt="logo" class="img-responsive" width="49px">
+                        <img src="<?=base_url()?>public/images/baba_makyeri_logo.png" alt="logo" class="img-responsive" width="49px">
                     </a>
                 </div>
 
